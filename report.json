@@ -1,0 +1,242 @@
+[
+    {
+        "type": "Bandit: hardcoded_password_string",
+        "file": ".\\ML\\front.py",
+        "severity": "LOW",
+        "description": "Possible hardcoded password: '123' (Confidence: MEDIUM)",
+        "line": 30,
+        "id": "B105"
+    },
+    {
+        "type": "Bandit: hardcoded_password_string",
+        "file": ".\\ML\\front.py",
+        "severity": "LOW",
+        "description": "Possible hardcoded password: '5321' (Confidence: MEDIUM)",
+        "line": 59,
+        "id": "B105"
+    },
+    {
+        "type": "Bandit: ssh_no_host_key_verification",
+        "file": ".\\ML\\front.py",
+        "severity": "HIGH",
+        "description": "Paramiko call with policy set to automatically trust the unknown host key. (Confidence: MEDIUM)",
+        "line": 62,
+        "id": "B507"
+    },
+    {
+        "type": "Bandit: hardcoded_password_string",
+        "file": ".\\ML\\hand_raise.py",
+        "severity": "LOW",
+        "description": "Possible hardcoded password: '' (Confidence: MEDIUM)",
+        "line": 27,
+        "id": "B105"
+    },
+    {
+        "type": "Bandit: hardcoded_password_string",
+        "file": ".\\ML\\hand_raise.py",
+        "severity": "LOW",
+        "description": "Possible hardcoded password: '1234shibu' (Confidence: MEDIUM)",
+        "line": 45,
+        "id": "B105"
+    },
+    {
+        "type": "Bandit: ssh_no_host_key_verification",
+        "file": ".\\ML\\hand_raise.py",
+        "severity": "HIGH",
+        "description": "Paramiko call with policy set to automatically trust the unknown host key. (Confidence: MEDIUM)",
+        "line": 48,
+        "id": "B507"
+    },
+    {
+        "type": "Bandit: hardcoded_password_string",
+        "file": ".\\ML\\leaning.py",
+        "severity": "LOW",
+        "description": "Possible hardcoded password: '' (Confidence: MEDIUM)",
+        "line": 28,
+        "id": "B105"
+    },
+    {
+        "type": "Bandit: hardcoded_password_string",
+        "file": ".\\ML\\leaning.py",
+        "severity": "LOW",
+        "description": "Possible hardcoded password: '1234shibu' (Confidence: MEDIUM)",
+        "line": 46,
+        "id": "B105"
+    },
+    {
+        "type": "Bandit: ssh_no_host_key_verification",
+        "file": ".\\ML\\leaning.py",
+        "severity": "HIGH",
+        "description": "Paramiko call with policy set to automatically trust the unknown host key. (Confidence: MEDIUM)",
+        "line": 49,
+        "id": "B507"
+    },
+    {
+        "type": "Bandit: hardcoded_password_string",
+        "file": ".\\ML\\mobile_detection.py",
+        "severity": "LOW",
+        "description": "Possible hardcoded password: '' (Confidence: MEDIUM)",
+        "line": 30,
+        "id": "B105"
+    },
+    {
+        "type": "Bandit: hardcoded_password_string",
+        "file": ".\\ML\\mobile_detection.py",
+        "severity": "LOW",
+        "description": "Possible hardcoded password: '1234shibu' (Confidence: MEDIUM)",
+        "line": 51,
+        "id": "B105"
+    },
+    {
+        "type": "Bandit: ssh_no_host_key_verification",
+        "file": ".\\ML\\mobile_detection.py",
+        "severity": "HIGH",
+        "description": "Paramiko call with policy set to automatically trust the unknown host key. (Confidence: MEDIUM)",
+        "line": 54,
+        "id": "B507"
+    },
+    {
+        "type": "Bandit: hardcoded_password_string",
+        "file": ".\\ML\\passing_paper.py",
+        "severity": "LOW",
+        "description": "Possible hardcoded password: '' (Confidence: MEDIUM)",
+        "line": 28,
+        "id": "B105"
+    },
+    {
+        "type": "Bandit: hardcoded_password_string",
+        "file": ".\\ML\\passing_paper.py",
+        "severity": "LOW",
+        "description": "Possible hardcoded password: '1234shibu' (Confidence: MEDIUM)",
+        "line": 47,
+        "id": "B105"
+    },
+    {
+        "type": "Bandit: ssh_no_host_key_verification",
+        "file": ".\\ML\\passing_paper.py",
+        "severity": "HIGH",
+        "description": "Paramiko call with policy set to automatically trust the unknown host key. (Confidence: MEDIUM)",
+        "line": 50,
+        "id": "B507"
+    },
+    {
+        "type": "Bandit: hardcoded_password_string",
+        "file": ".\\ML\\top.py",
+        "severity": "LOW",
+        "description": "Possible hardcoded password: '123' (Confidence: MEDIUM)",
+        "line": 28,
+        "id": "B105"
+    },
+    {
+        "type": "Bandit: hardcoded_password_string",
+        "file": ".\\ML\\top.py",
+        "severity": "LOW",
+        "description": "Possible hardcoded password: '5321' (Confidence: MEDIUM)",
+        "line": 46,
+        "id": "B105"
+    },
+    {
+        "type": "Bandit: ssh_no_host_key_verification",
+        "file": ".\\ML\\top.py",
+        "severity": "HIGH",
+        "description": "Paramiko call with policy set to automatically trust the unknown host key. (Confidence: MEDIUM)",
+        "line": 49,
+        "id": "B507"
+    },
+    {
+        "type": "Bandit: hardcoded_password_string",
+        "file": ".\\ML\\top_corner.py",
+        "severity": "LOW",
+        "description": "Possible hardcoded password: '123' (Confidence: MEDIUM)",
+        "line": 29,
+        "id": "B105"
+    },
+    {
+        "type": "Bandit: hardcoded_password_string",
+        "file": ".\\ML\\top_corner.py",
+        "severity": "LOW",
+        "description": "Possible hardcoded password: '5321' (Confidence: MEDIUM)",
+        "line": 76,
+        "id": "B105"
+    },
+    {
+        "type": "Bandit: ssh_no_host_key_verification",
+        "file": ".\\ML\\top_corner.py",
+        "severity": "HIGH",
+        "description": "Paramiko call with policy set to automatically trust the unknown host key. (Confidence: MEDIUM)",
+        "line": 80,
+        "id": "B507"
+    },
+    {
+        "type": "Bandit: hardcoded_password_string",
+        "file": ".\\ML\\turning_back.py",
+        "severity": "LOW",
+        "description": "Possible hardcoded password: '' (Confidence: MEDIUM)",
+        "line": 28,
+        "id": "B105"
+    },
+    {
+        "type": "Bandit: hardcoded_password_string",
+        "file": ".\\ML\\turning_back.py",
+        "severity": "LOW",
+        "description": "Possible hardcoded password: '1234shibu' (Confidence: MEDIUM)",
+        "line": 46,
+        "id": "B105"
+    },
+    {
+        "type": "Bandit: ssh_no_host_key_verification",
+        "file": ".\\ML\\turning_back.py",
+        "severity": "HIGH",
+        "description": "Paramiko call with policy set to automatically trust the unknown host key. (Confidence: MEDIUM)",
+        "line": 49,
+        "id": "B507"
+    },
+    {
+        "type": "Bandit: blacklist",
+        "file": ".\\app\\utils.py",
+        "severity": "LOW",
+        "description": "Consider possible security implications associated with the subprocess module. (Confidence: HIGH)",
+        "line": 6,
+        "id": "B404"
+    },
+    {
+        "type": "Bandit: ssh_no_host_key_verification",
+        "file": ".\\app\\utils.py",
+        "severity": "HIGH",
+        "description": "Paramiko call with policy set to automatically trust the unknown host key. (Confidence: MEDIUM)",
+        "line": 33,
+        "id": "B507"
+    },
+    {
+        "type": "Bandit: paramiko_calls",
+        "file": ".\\app\\utils.py",
+        "severity": "MEDIUM",
+        "description": "Possible shell injection via Paramiko call, check inputs are properly sanitized. (Confidence: MEDIUM)",
+        "line": 54,
+        "id": "B601"
+    },
+    {
+        "type": "Bandit: subprocess_popen_with_shell_equals_true",
+        "file": ".\\app\\utils.py",
+        "severity": "HIGH",
+        "description": "subprocess call with shell=True identified, security issue. (Confidence: HIGH)",
+        "line": 86,
+        "id": "B602"
+    },
+    {
+        "type": "Bandit: blacklist",
+        "file": ".\\app\\views.py",
+        "severity": "LOW",
+        "description": "Consider possible security implications associated with the subprocess module. (Confidence: HIGH)",
+        "line": 25,
+        "id": "B404"
+    },
+    {
+        "type": "Bandit: try_except_pass",
+        "file": ".\\app\\views.py",
+        "severity": "LOW",
+        "description": "Try, Except, Pass detected. (Confidence: HIGH)",
+        "line": 370,
+        "id": "B110"
+    }
+]
