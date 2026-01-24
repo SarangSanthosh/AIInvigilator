@@ -1,0 +1,21 @@
+# Django Settings
+SECRET_KEY=iwu@s+iyu#33j@56t)8xnm)t+je8g6l7eyw1b59$0nim+hemk+
+DEBUG=True
+
+# Database Configuration (MySQL)
+DB_NAME=aiinvigilator_db
+DB_HOST=localhost
+DB_USER=root
+DB_PASS=AIInvigilator2026
+DB_PORT=3306
+
+# Email Configuration (Gmail)
+# For testing, you can use dummy values
+EMAIL_HOST_USER=your.email@gmail.com
+EMAIL_HOST_PASSWORD=your_app_password_here
+
+# Twilio Configuration (For SMS alerts)
+# For testing, you can use dummy values
+TWILIO_ACCOUNT_SID=dummy_account_sid
+TWILIO_AUTH_TOKEN=dummy_auth_token
+TWILIO_PHONE_NUMBER=+1234567890
