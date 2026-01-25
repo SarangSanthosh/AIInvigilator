@@ -1,7 +1,6 @@
 <!-- manaage_lecture_halls.html -->
 
-{% include "header.html" %}
-{% block content %}
+{% include "header.html" %} {% block content %}
 
 <style>
   body {
@@ -34,7 +33,7 @@
     border-radius: 8px;
     padding: 20px;
     margin-bottom: 30px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   }
   .add-form label {
     font-weight: 600;
@@ -59,7 +58,7 @@
     background: #fff;
     border-radius: 8px;
     padding: 20px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   }
   .table {
     margin-bottom: 0;
@@ -111,8 +110,7 @@
 <section class="manage-section">
   <div class="container">
     <h2 class="manage-heading">Manage Lecture Halls</h2>
-    
-    
+
     <!-- Add Lecture Hall Form -->
     <div class="add-form">
       <form method="post" class="needs-validation" novalidate>
@@ -120,22 +118,31 @@
         <div class="form-row align-items-center">
           <div class="col-md-4 mb-3">
             <label for="hallName">Lecture Hall Name</label>
-            <input type="text" name="hall_name" class="form-control" id="hallName" placeholder="e.g. LH1" required>
+            <input
+              type="text"
+              name="hall_name"
+              class="form-control"
+              id="hallName"
+              placeholder="e.g. LH1"
+              required
+            />
             <div class="invalid-feedback">
               Please provide a lecture hall name.
             </div>
           </div>
           <div class="col-md-4 mb-3">
             <label for="buildingSelect">Building</label>
-            <select name="building" class="form-control" id="buildingSelect" required>
+            <select
+              name="building"
+              class="form-control"
+              id="buildingSelect"
+              required
+            >
               <option value="">Select Building</option>
               <option value="Main Block">Main Block</option>
-              <option value="Second Block">Second Block</option>
-              <option value="Third Block">Third Block</option>
+              <option value="Second Block">New Block</option>
             </select>
-            <div class="invalid-feedback">
-              Please select a building.
-            </div>
+            <div class="invalid-feedback">Please select a building.</div>
           </div>
           <div class="col-md-4 mb-3 align-self-end">
             <button type="submit" name="add_hall" class="btn btn-add btn-block">
@@ -145,65 +152,101 @@
         </div>
       </form>
       {% if error_message %}
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-          <strong>Error!</strong> {{ error_message }}
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-      {% endif %}
-    </div>
-    
-<br><br>
-<!-- FILTER BAR -->
-<div class="filter-bar mb-4">
-  <form method="get">
-    <div class="form-row">
-      <!-- Search -->
-      <div class="form-group col-md-4">
-        <label for="q">Search Lecture Hall:</label>
-        <input 
-          type="text" 
-          name="q" 
-          id="q" 
-          class="form-control" 
-          placeholder="Enter LH name (e.g., LH1)" 
-          value="{{ query }}">
-      </div>
-
-      <!-- Filter by Building -->
-      <div class="form-group col-md-4">
-        <label for="building">Filter by Building:</label>
-        <select name="building" class="form-control" id="building">
-          <option value="">All Buildings</option>
-          {% for b in buildings %}
-            <option value="{{ b }}" {% if building_filter == b %}selected{% endif %}>{{ b }}</option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <!-- Filter by Assignment -->
-      <div class="form-group col-md-3">
-        <label for="assigned">Filter by Assignment:</label>
-        <select name="assigned" class="form-control" id="assigned">
-          <option value="">All</option>
-          <option value="assigned" {% if assignment_filter == 'assigned' %}selected{% endif %}>Assigned</option>
-          <option value="unassigned" {% if assignment_filter == 'unassigned' %}selected{% endif %}>Unassigned</option>
-        </select>
-      </div>
-
-      <!-- Apply Button -->
-      <div class="form-group col-md-1 d-flex align-items-end">
-        <button type="submit" class="btn btn-primary w-100">
-          <i class="fas fa-filter"></i>
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Error!</strong> {{ error_message }}
+        <button
+          type="button"
+          class="close"
+          data-dismiss="alert"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
         </button>
       </div>
+      {% endif %}
     </div>
-  </form>
-</div>
 
+    <br /><br />
+    <!-- FILTER BAR -->
+    <div class="filter-bar mb-4">
+      <form method="get">
+        <div class="form-row">
+          <!-- Search -->
+          <div class="form-group col-md-4">
+            <label for="q">Search Lecture Hall:</label>
+            <input
+              type="text"
+              name="q"
+              id="q"
+              class="form-control"
+              placeholder="Enter LH name (e.g., LH1)"
+              value="{{ query }}"
+            />
+          </div>
 
+          <!-- Filter by Building -->
+          <div class="form-group col-md-4">
+            <label for="building">Filter by Building:</label>
+            <select name="building" class="form-control" id="building">
+              <option value="">All Buildings</option>
+              {% for b in buildings %}
+              <option
+                value="{{ b }}"
+                {%
+                if
+                building_filter=""
+                ="b"
+                %}selected{%
+                endif
+                %}
+              >
+                {{ b }}
+              </option>
+              {% endfor %}
+            </select>
+          </div>
 
+          <!-- Filter by Assignment -->
+          <div class="form-group col-md-3">
+            <label for="assigned">Filter by Assignment:</label>
+            <select name="assigned" class="form-control" id="assigned">
+              <option value="">All</option>
+              <option
+                value="assigned"
+                {%
+                if
+                assignment_filter=""
+                ="assigned"
+                %}selected{%
+                endif
+                %}
+              >
+                Assigned
+              </option>
+              <option
+                value="unassigned"
+                {%
+                if
+                assignment_filter=""
+                ="unassigned"
+                %}selected{%
+                endif
+                %}
+              >
+                Unassigned
+              </option>
+            </select>
+          </div>
+
+          <!-- Apply Button -->
+          <div class="form-group col-md-1 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100">
+              <i class="fas fa-filter"></i>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
 
     <!-- Lecture Hall & Teacher Mapping Table -->
     <div class="table-container">
@@ -222,25 +265,35 @@
             <td>{{ hall.hall_name }}</td>
             <td>{{ hall.building }}</td>
             <td>
-              {% if hall.assigned_teacher %}
-                {{ hall.assigned_teacher.get_full_name|default:hall.assigned_teacher.username }}
-              {% else %}
-                <span class="text-muted">Not Assigned</span>
+              {% if hall.assigned_teacher %} {{
+              hall.assigned_teacher.get_full_name|default:hall.assigned_teacher.username
+              }} {% else %}
+              <span class="text-muted">Not Assigned</span>
               {% endif %}
             </td>
             <td>
               <form method="post" class="form-inline">
                 {% csrf_token %}
-                <input type="hidden" name="hall_id" value="{{ hall.id }}">
+                <input type="hidden" name="hall_id" value="{{ hall.id }}" />
                 <div class="input-group">
-                  <select name="teacher_id" class="form-control teacher-select" required>
+                  <select
+                    name="teacher_id"
+                    class="form-control teacher-select"
+                    required
+                  >
                     <option value="">Select Teacher</option>
                     {% for teacher in teachers %}
-                      <option value="{{ teacher.id }}">{{ teacher.get_full_name|default:teacher.username }}</option>
+                    <option value="{{ teacher.id }}">
+                      {{ teacher.get_full_name|default:teacher.username }}
+                    </option>
                     {% endfor %}
                   </select>
                   <div class="input-group-append">
-                    <button class="btn btn-assign" type="submit" name="map_teacher">
+                    <button
+                      class="btn btn-assign"
+                      type="submit"
+                      name="map_teacher"
+                    >
                       <i class="fas fa-user-plus"></i> Assign
                     </button>
                   </div>
@@ -252,27 +305,34 @@
         </tbody>
       </table>
     </div>
-    
   </div>
 </section>
 
 <!-- Optional JavaScript for Form Validation -->
 <script>
   // Disable form submissions if there are invalid fields
-  (function() {
-    'use strict';
-    window.addEventListener('load', function() {
-      var forms = document.getElementsByClassName('needs-validation');
-      Array.prototype.filter.call(forms, function(form) {
-        form.addEventListener('submit', function(event) {
-          if (form.checkValidity() === false) {
-            event.preventDefault();
-            event.stopPropagation();
-          }
-          form.classList.add('was-validated');
-        }, false);
-      });
-    }, false);
+  (function () {
+    "use strict";
+    window.addEventListener(
+      "load",
+      function () {
+        var forms = document.getElementsByClassName("needs-validation");
+        Array.prototype.filter.call(forms, function (form) {
+          form.addEventListener(
+            "submit",
+            function (event) {
+              if (form.checkValidity() === false) {
+                event.preventDefault();
+                event.stopPropagation();
+              }
+              form.classList.add("was-validated");
+            },
+            false,
+          );
+        });
+      },
+      false,
+    );
   })();
 </script>
 {% endblock %}

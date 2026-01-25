@@ -26,9 +26,9 @@ VIDEO_PATH = "test_videos/Leaning.mp4"
 LECTURE_HALL_NAME = "LH1"  # Match your lecture hall name exactly
 BUILDING = "Main Block"  # Match your building name exactly
 
-DB_USER = "root"
-DB_PASSWORD = "robertlewandowski"  # Your MySQL password
-DB_NAME = "aiinvigilator_db"  # Your database name
+DB_USER = "aiinvigilator_user"
+DB_PASSWORD = "ars002"  # Your MySQL password
+DB_NAME = "aiinvigilator"  # Your database name
 
 FRAME_WIDTH = 1280
 FRAME_HEIGHT = 720
