@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from .models import *
 from threading import Event, Thread
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.decorators.csrf import csrf_exempt
@@ -25,6 +25,7 @@ import os
 import subprocess
 from .utils import RUNNING_SCRIPTS 
 import time
+import csv
 from django.db.models import Count, Q
 from datetime import datetime, timedelta
 
@@ -214,6 +215,26 @@ def malpractice_log(request):
     #         logs = logs.filter(verified=False)
 
     logs = logs.order_by('-date', '-time')
+
+    # CSV export
+    if request.GET.get('export') == 'csv':
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="malpractice_logs.csv"'
+        writer = csv.writer(response)
+        writer.writerow(['Date', 'Time', 'Malpractice', 'Building', 'Hall', 'Verified', 'Proof'])
+        for l in logs.select_related('lecture_hall'):
+            building = l.lecture_hall.building if l.lecture_hall else ''
+            hall = l.lecture_hall.hall_name if l.lecture_hall else ''
+            writer.writerow([
+                l.date,
+                l.time,
+                l.malpractice,
+                building,
+                hall,
+                'Yes' if l.verified else 'No',
+                l.proof,
+            ])
+        return response
 
     # Update session record count to trigger alert if new logs appear
     record_count = logs.count()

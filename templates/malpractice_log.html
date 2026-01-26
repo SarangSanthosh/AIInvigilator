@@ -42,6 +42,12 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   }
 
+  .export-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 12px;
+  }
+
   /* Table Styling */
   table.table {
     width: 100%;
@@ -375,6 +381,15 @@
         </div>
       </div>
     {% endif %}
+
+    <!-- Export Actions -->
+    <div class="export-actions">
+      {% with request.GET.urlencode as qs %}
+        <a href="?{{ qs }}&export=csv" class="btn btn-primary btn-download" title="Export filtered results to CSV">
+          Export CSV
+        </a>
+      {% endwith %}
+    </div>
 
     <!-- Malpractice Log Table -->
     <div class="table-container">
