@@ -17,9 +17,9 @@ if IS_CLIENT:
 # ========================
 # CONFIGURABLE VARIABLES
 # ========================
-USE_CAMERA = True
-CAMERA_INDEX = 0  # Try 0 first, if no camera, try 1
-VIDEO_PATH = "test_videos/Leaning.mp4"
+USE_CAMERA = False
+CAMERA_INDEX = 1  # Try 0 first, if no camera, try 1
+VIDEO_PATH = "videos/Turning_back_1.mp4"
 # VIDEO_PATH = "test_videos/Passing_Paper.mp4"
 # VIDEO_PATH = "test_videos/Phone.mp4"
 
@@ -38,7 +38,13 @@ POSE_MODEL_PATH = "yolov8n-pose.pt"
 # Mobile model (for mobile phone detection)
 MOBILE_MODEL_PATH = "yolo11n.pt"
 
-MEDIA_DIR = "../media/"
+# Use absolute path for media directory
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(SCRIPT_DIR)
+MEDIA_DIR = os.path.join(PROJECT_ROOT, "media")
+
+# Create media directory if it doesn't exist
+os.makedirs(MEDIA_DIR, exist_ok=True)
 
 # Thresholds for events
 LEANING_THRESHOLD = 3      # consecutive frames needed for leaning

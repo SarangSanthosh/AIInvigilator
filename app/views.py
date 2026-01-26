@@ -25,6 +25,8 @@ import os
 import subprocess
 from .utils import RUNNING_SCRIPTS 
 import time
+from django.db.models import Count, Q
+from datetime import datetime, timedelta
 
 # Global stop event
 stop_event = Event()
@@ -570,5 +572,74 @@ def stop_camera_scripts(request):
     return JsonResponse({"error": "Invalid request method"}, status=400)
 
 
+@login_required
+def dashboard(request):
+    """Analytics dashboard showing malpractice statistics."""
+    today = datetime.now().date()
+    week_ago = today - timedelta(days=7)
+    month_ago = today - timedelta(days=30)
 
+    # Base queryset based on user role
+    if request.user.is_superuser:
+        base_logs = MalpraticeDetection.objects.all()
+        all_halls = LectureHall.objects.all()
+    else:
+        # Teachers see only their assigned hall
+        assigned_halls = LectureHall.objects.filter(assigned_teacher=request.user)
+        base_logs = MalpraticeDetection.objects.filter(lecture_hall__in=assigned_halls)
+        all_halls = assigned_halls
+
+    # Total counts
+    total_incidents = base_logs.count()
+    today_incidents = base_logs.filter(date=today).count()
+    week_incidents = base_logs.filter(date__gte=week_ago).count()
+    month_incidents = base_logs.filter(date__gte=month_ago).count()
+
+    # Verification stats
+    verified_count = base_logs.filter(verified=True).count()
+    pending_count = base_logs.filter(verified=False).count()
+    confirmed_malpractice = base_logs.filter(verified=True, is_malpractice=True).count()
+
+    # Malpractice by type
+    malpractice_by_type = base_logs.values('malpractice').annotate(
+        count=Count('id')
+    ).order_by('-count')[:10]
+
+    # Most active halls
+    active_halls = base_logs.values(
+        'lecture_hall__building', 
+        'lecture_hall__hall_name'
+    ).annotate(
+        count=Count('id')
+    ).order_by('-count')[:5]
+
+    # Daily trend for last 7 days
+    daily_trend = []
+    for i in range(6, -1, -1):
+        day = today - timedelta(days=i)
+        count = base_logs.filter(date=day).count()
+        daily_trend.append({
+            'date': day.strftime('%m/%d'),
+            'count': count
+        })
+
+    # Recent incidents (last 5)
+    recent_incidents = base_logs.select_related('lecture_hall').order_by('-date', '-time')[:5]
+
+    context = {
+        'total_incidents': total_incidents,
+        'today_incidents': today_incidents,
+        'week_incidents': week_incidents,
+        'month_incidents': month_incidents,
+        'verified_count': verified_count,
+        'pending_count': pending_count,
+        'confirmed_malpractice': confirmed_malpractice,
+        'malpractice_by_type': malpractice_by_type,
+        'active_halls': active_halls,
+        'daily_trend': daily_trend,
+        'recent_incidents': recent_incidents,
+        'total_halls': all_halls.count(),
+    }
+    
+    return render(request, 'dashboard.html', context)
 
