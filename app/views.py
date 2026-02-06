@@ -267,13 +267,22 @@ def malpractice_log(request):
 
 
 @csrf_exempt
-@login_required
-@user_passes_test(is_admin)
 def send_notifications_background(log_id):
     """Send email and SMS notifications in background thread"""
     try:
+        print(f"\n{'='*60}")
+        print(f"[EMAIL DEBUG] Starting notification process for log_id: {log_id}")
+        print(f"{'='*60}\n")
+        
         log = MalpraticeDetection.objects.get(id=log_id)
         teacher_user = log.lecture_hall.assigned_teacher
+        
+        print(f"[DEBUG] Teacher: {teacher_user.username}")
+        print(f"[DEBUG] Teacher Email: {teacher_user.email}")
+        print(f"[DEBUG] From Email: {settings.EMAIL_HOST_USER}")
+        print(f"[DEBUG] Email Host: {settings.EMAIL_HOST}")
+        print(f"[DEBUG] Email Port: {settings.EMAIL_PORT}")
+        print(f"[DEBUG] Email TLS: {settings.EMAIL_USE_TLS}")
         
         try:
             teacher_profile = teacher_user.teacherprofile
@@ -296,9 +305,15 @@ def send_notifications_background(log_id):
         )
 
         try:
+            print(f"[EMAIL] Attempting to send email...")
             send_mail(subject, message_body, settings.EMAIL_HOST_USER, [teacher_user.email], fail_silently=False)
+            print(f"[SUCCESS] ✅ Email sent successfully to {teacher_user.email}")
         except Exception as e:
-            print(f"\n[ERROR] Email sending failed: {e}\n")
+            print(f"\n[ERROR] ❌ Email sending failed!")
+            print(f"[ERROR] Error Type: {type(e).__name__}")
+            print(f"[ERROR] Error Message: {str(e)}")
+            import traceback
+            print(f"[ERROR] Full traceback:\n{traceback.format_exc()}\n")
 
         # Send SMS Notification if phone is available
         if teacher_profile and teacher_profile.phone:
@@ -317,6 +332,7 @@ def send_notifications_background(log_id):
                 print(f"\n[ERROR] SMS sending failed: {e}\n")
     except Exception as e:
         print(f"[ERROR] Background notification failed: {e}")
+
 
 
 def review_malpractice(request):
@@ -663,4 +679,68 @@ def dashboard(request):
     }
     
     return render(request, 'dashboard.html', context)
+
+
+# Test Email Function
+@login_required
+@user_passes_test(is_admin)
+def test_email(request):
+    """Test email configuration by sending a test email"""
+    import traceback
+    
+    try:
+        recipient_email = request.user.email if request.user.email else 'no-email-set@example.com'
+        
+        print(f"\n{'='*60}")
+        print(f"[EMAIL TEST] Starting email test...")
+        print(f"{'='*60}")
+        print(f"[CONFIG] EMAIL_BACKEND: {settings.EMAIL_BACKEND}")
+        print(f"[CONFIG] EMAIL_HOST: {settings.EMAIL_HOST}")
+        print(f"[CONFIG] EMAIL_PORT: {settings.EMAIL_PORT}")
+        print(f"[CONFIG] EMAIL_USE_TLS: {settings.EMAIL_USE_TLS}")
+        print(f"[CONFIG] EMAIL_HOST_USER: {settings.EMAIL_HOST_USER}")
+        print(f"[CONFIG] EMAIL_HOST_PASSWORD: {'*' * len(settings.EMAIL_HOST_PASSWORD)} (length: {len(settings.EMAIL_HOST_PASSWORD)})")
+        print(f"[CONFIG] Recipient: {recipient_email}")
+        print(f"{'='*60}\n")
+        
+        # Send test email
+        send_mail(
+            subject='🔔 AI Invigilator - Email Test',
+            message='This is a test email from AI Invigilator system. If you received this, your email configuration is working correctly!',
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[recipient_email],
+            fail_silently=False,
+        )
+        
+        print(f"[SUCCESS] ✅ Email sent successfully!\n")
+        
+        return JsonResponse({
+            'success': True, 
+            'message': f'Test email sent successfully to {recipient_email}. Please check your inbox (and spam folder).',
+            'config': {
+                'from': settings.EMAIL_HOST_USER,
+                'to': recipient_email,
+                'host': settings.EMAIL_HOST,
+                'port': settings.EMAIL_PORT
+            }
+        })
+    except Exception as e:
+        error_details = {
+            'error_type': type(e).__name__,
+            'error_message': str(e),
+            'traceback': traceback.format_exc()
+        }
+        
+        print(f"\n[ERROR] ❌ Email test failed!")
+        print(f"[ERROR] Error Type: {error_details['error_type']}")
+        print(f"[ERROR] Error Message: {error_details['error_message']}")
+        print(f"[ERROR] Full traceback:\n{error_details['traceback']}\n")
+        
+        return JsonResponse({
+            'success': False, 
+            'error': str(e),
+            'error_type': error_details['error_type'],
+            'message': f'Failed to send email. Error: {str(e)}',
+            'details': error_details
+        })
 

@@ -21,12 +21,12 @@ USE_CAMERA = False
 CAMERA_INDEX = 1
 VIDEO_PATH = "test_videos/Top_Corner.mp4"
 
-LECTURE_HALL_NAME = "LH2"
-BUILDING = "Second Block"
+LECTURE_HALL_NAME = "LH1"
+BUILDING = "Main Block"
 
-DB_USER = "root"
-DB_PASSWORD = ""
-DB_NAME = "exam_monitoring"
+DB_USER = "aiinvigilator_user"
+DB_PASSWORD = "ars002"
+DB_NAME = "aiinvigilator"
 
 FRAME_WIDTH = 1280
 FRAME_HEIGHT = 720

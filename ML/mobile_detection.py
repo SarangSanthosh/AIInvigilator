@@ -162,16 +162,16 @@ while cap.isOpened():
                     remote_media_path = f"./Documents/Repos/AIInvigilator/application/application/media/{proof_filename}"
                     scp.put("output_mobiledetection.mp4", remote_media_path)
 
-                # Log to DB
+                # Calculate average confidence score
+                avg_confidence = (sum(confidence_scores) / len(confidence_scores)) * 100 if confidence_scores else 0.0
+                
+                # Log to DB with confidence scoring
+                sqLog to DB
                 sql = """
                     INSERT INTO app_malpraticedetection (date, time, malpractice, proof, lecture_hall_id)
                     VALUES (%s, %s, %s, %s, %s)
                 """
-                values = (date_db, time_db, ACTION_NAME, proof_filename, hall_id)
-                cursor.execute(sql, values)
-                db.commit()
-            else:
-                if video_control and out is not None:
+                values = (date_db, time_db, ACTION_NAME, proof_filename, hall_id
                     out.release()
                 if os.path.exists("output_mobiledetection.mp4"):
                     os.remove("output_mobiledetection.mp4")

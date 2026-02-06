@@ -8,8 +8,8 @@ from django.contrib import admin
 class LectureHall(models.Model):
     BUILDING_CHOICES = [
         ('MAIN', 'Main Block'),
-        ('KE', 'Second Block'),
-        ('PG', 'Third Block'),
+        ('NEW', 'New Block'),
+       
         # Add more if needed
     ]
     building = models.CharField(max_length=50, choices=BUILDING_CHOICES)

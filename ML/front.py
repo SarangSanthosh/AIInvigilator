@@ -24,7 +24,7 @@ VIDEO_PATH = "videos/Turning_back_1.mp4"
 # VIDEO_PATH = "test_videos/Phone.mp4"
 
 LECTURE_HALL_NAME = "LH1"  # Match your lecture hall name exactly
-BUILDING = "Main Block"  # Match your building name exactly
+BUILDING = "Second Block"  # Match your building name exactly
 
 DB_USER = "aiinvigilator_user"
 DB_PASSWORD = "ars002"  # Your MySQL password
