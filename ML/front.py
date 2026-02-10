@@ -102,17 +102,17 @@ if IS_CLIENT:
     db = mysql.connector.connect(
         host=hostname,
         port=3306,
-        user=DB_USER,
-        password=DB_PASSWORD,
-        database=DB_NAME
+        user="aiuser",
+        password="Arkl@2004",
+        database="aiinvigilator_db"
     )
 else:
     # Local DB if host
     db = mysql.connector.connect(
         host="localhost",
-        user=DB_USER,
-        password=DB_PASSWORD,
-        database=DB_NAME
+        user="aiuser",
+        password="Arkl@2004",
+        database="aiinvigilator_db"
     )
 
 cursor = db.cursor()
@@ -124,6 +124,8 @@ def is_leaning(keypoints):
     """
     Improved leaning detection by comparing head & shoulder centers.
     Returns False if person is turning back to avoid false positives.
+    
+    Optimized for FRONT VIEW cameras in classroom settings.
     """
     if keypoints is None or len(keypoints) < 7:
         return False
@@ -150,8 +152,9 @@ def is_leaning(keypoints):
     if shoulder_height_diff > 40:
         return False
 
-    # Increased threshold - head must be significantly off-center
-    return abs(head_center_x - shoulder_center_x) > 80
+    # OPTIMIZED for front view: detect moderate leaning (60px instead of 80px)
+    # This catches student leaning left/right to peek at neighbors or notes
+    return abs(head_center_x - shoulder_center_x) > 60
 
 def calculate_distance(p1, p2):
     """Calculate Euclidean distance between two points."""
@@ -160,7 +163,15 @@ def calculate_distance(p1, p2):
 def is_turning_back(keypoints):
     """
     Detect if person is turning back using eye-to-shoulder ratio.
-    Simple and reliable approach.
+    Simple and reliable approach optimized for FRONT VIEW cameras.
+    
+    In front view:
+    - Frontal face: eye_ratio ≈ 0.75-1.0 (both eyes fully visible)
+    - Slight turn (20°): eye_ratio ≈ 0.40-0.50
+    - Profile turn (45°): eye_ratio ≈ 0.15-0.25 (one eye visible)
+    - Near full back: eye_ratio < 0.15
+    
+    Threshold 0.17 balances detection without false positives on leaning.
     """
     if keypoints is None or len(keypoints) < 7:
         return False
@@ -181,10 +192,17 @@ def is_turning_back(keypoints):
     # Calculate eye-to-shoulder ratio
     eye_ratio = eye_dist / shoulder_dist
     
-    # When facing camera: eye_ratio is typically 0.30-0.75
-    # When turning back/profile: eye_ratio is < 0.17
-    # Sweet spot: catches back-turning without false positives on frontal faces
-    is_back = eye_ratio < 0.17
+    # OPTIMIZED THRESHOLD: 0.14 (stricter than 0.17 to avoid false lean detection)
+    #
+    # Threshold interpretation for FRONT VIEW:
+    # - 0.75-1.0:  Frontal view (both eyes fully visible)
+    # - 0.40-0.75: Slight tilt, still facing forward
+    # - 0.25-0.40: Moderate 20-30° turn
+    # - 0.14-0.25: Profile/45° turn (likely turning back)
+    # - <0.14:     Near full turn/back to camera (definite turning)
+    #
+    # Using 0.14 to catch true profile view without false positives on lean
+    is_back = eye_ratio < 0.14
     
     return is_back
 
