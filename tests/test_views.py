@@ -91,7 +91,7 @@ class TestReviewMalpractice:
         response = admin_client.post(
             '/review_malpractice/',
             data=json.dumps({
-                'proof': malpractice_log.proof,
+                'log_id': malpractice_log.id,
                 'decision': 'yes'
             }),
             content_type='application/json'
@@ -111,7 +111,7 @@ class TestReviewMalpractice:
         response = admin_client.post(
             '/review_malpractice/',
             data=json.dumps({
-                'proof': malpractice_log.proof,
+                'log_id': malpractice_log.id,
                 'decision': 'no'
             }),
             content_type='application/json'

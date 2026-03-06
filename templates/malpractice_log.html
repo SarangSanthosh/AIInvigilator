@@ -777,6 +777,16 @@
         deleteReviewInput.value = currentState;
       }
 
+      // Sync the filter form's hidden review input so filter submissions
+      // preserve the current toggle state instead of reverting to defaults
+      const filterReviewInput = document.querySelector('input[name="review"]');
+      if (filterReviewInput) {
+        filterReviewInput.value = currentState;
+      }
+
+      // Keep the reviewMalpractice function's filter variable in sync
+      currentReviewFilter = currentState;
+
       // Update warning text in modal
       const deleteWarningText = document.getElementById("deleteWarningText");
       if (deleteWarningText) {
@@ -1109,7 +1119,7 @@
 
 
   // Get current review filter from template (defaults to 'not_reviewed')
-  const currentReviewFilter = "{{ review_filter|default:'not_reviewed' }}".toLowerCase();
+  let currentReviewFilter = "{{ review_filter|default:'not_reviewed' }}".toLowerCase();
   function reviewMalpractice(button, decision) {
     const originalContent = button.innerHTML;
     button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
@@ -1117,9 +1127,6 @@
 
     const row = button.closest('tr');
     const logId = row.getAttribute('data-log-id');
-    // Get proof filename from the download link in the same row
-    const downloadLink = row.querySelector('a[download]');
-    const proof = downloadLink ? downloadLink.getAttribute('href').replace('/media/', '') : '';
 
     fetch('/review_malpractice/', {
       method: 'POST',
@@ -1128,7 +1135,7 @@
         'X-CSRFToken': '{{ csrf_token }}'
       },
       body: JSON.stringify({
-        proof: proof,
+        log_id: logId,
         decision: decision
       })
     })

@@ -10,11 +10,16 @@ def send_sms_notification(to_phone, message_body):
     Sends an SMS to the specified phone number using Twilio.
     :param to_phone: str -> phone number in E.164 format, e.g. +919876543210
     :param message_body: str -> The text message
+    Returns True if sent, False if skipped (e.g. dummy credentials).
     """
-    # print(to_phone)
     account_sid = settings.TWILIO_ACCOUNT_SID
     auth_token = settings.TWILIO_AUTH_TOKEN
     from_phone = settings.TWILIO_PHONE_NUMBER
+
+    # Skip SMS if credentials are placeholder / not configured
+    if not account_sid or not auth_token or 'dummy' in account_sid.lower():
+        print(f"[SMS] Skipped — Twilio credentials not configured (to={to_phone})")
+        return False
 
     client = Client(account_sid, auth_token)
     client.messages.create(
@@ -22,6 +27,7 @@ def send_sms_notification(to_phone, message_body):
         from_=from_phone,
         to=to_phone
     )
+    return True
 
 
 

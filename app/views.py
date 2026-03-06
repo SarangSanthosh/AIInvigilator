@@ -541,15 +541,17 @@ def malpractice_log(request):
 def review_malpractice(request):
     try:
         data = json.loads(request.body)
-        proof_filename = data.get('proof')
+        log_id = data.get('log_id')
         decision = data.get('decision')
 
-        if not proof_filename or decision not in ['yes', 'no']:
+        if not log_id or decision not in ['yes', 'no']:
             return JsonResponse({'success': False, 'error': 'Invalid data received'})
 
-        # Find the malpractice log
+        # Find the malpractice log by primary key (reliable & unique)
         try:
-            log = MalpraticeDetection.objects.get(proof=proof_filename)
+            log = MalpraticeDetection.objects.select_related(
+                'lecture_hall', 'lecture_hall__assigned_teacher'
+            ).get(id=log_id)
         except MalpraticeDetection.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Malpractice log not found'})
 
@@ -559,11 +561,15 @@ def review_malpractice(request):
         # Make visible to teacher after admin review (malpractice decisions only)
         if log.is_malpractice:
             log.teacher_visible = True
-        log.save()
+        log.save(update_fields=['verified', 'is_malpractice', 'teacher_visible'])
 
-        # If approved as malpractice, send notifications via Celery
+        # Send notifications via Celery (isolated — notification failure must NOT
+        # affect the review response, since the DB save already committed above)
         if log.is_malpractice and log.lecture_hall and log.lecture_hall.assigned_teacher:
-            send_malpractice_notification.delay(log.id)
+            try:
+                send_malpractice_notification.delay(log.id)
+            except Exception as notify_err:
+                print(f"[WARNING] Failed to queue notification for log {log.id}: {notify_err}")
 
         return JsonResponse({'success': True})
 
@@ -689,9 +695,12 @@ def ai_bulk_action(request):
                 high_prob_logs, ['verified', 'is_malpractice', 'teacher_visible'], batch_size=200
             )
             
-            # Send notifications via Celery (replaces Thread spawning)
+            # Send notifications via Celery (isolated — must not affect bulk action response)
             if notification_ids:
-                send_bulk_notifications.delay(notification_ids)
+                try:
+                    send_bulk_notifications.delay(notification_ids)
+                except Exception as notify_err:
+                    print(f"[WARNING] Failed to queue bulk notifications: {notify_err}")
             
             return JsonResponse({
                 'status': 'success', 
