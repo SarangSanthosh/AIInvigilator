@@ -163,7 +163,7 @@ Each detection receives a probability score (0-100%) calculated using a weighted
 - 🔒 **Session Management** — Race condition protection, deduplication, heartbeat monitoring
 - 🌐 **LAN Access** — Multiple devices can connect via WiFi without any installation
 - 🗄️ **Redis Channel Layer** — Production-grade WebSocket backend replacing in-memory layer
-- 📨 **Celery Task Queue** — Reliable background email/SMS notifications with retry logic
+- 📨 **Celery Task Queue** — Reliable background email notifications with retry logic
 - 🔗 **DB Connection Pooling** — SQLAlchemy-backed MySQL connection pool (10 persistent + 20 overflow)
 - 🧪 **Automated Testing** — 45 pytest tests covering models, views, and tasks
 - 🔁 **CI/CD Pipeline** — GitHub Actions with automated testing, linting, and Docker builds
@@ -300,7 +300,7 @@ In a **separate terminal** (same directory as `manage.py`):
 celery -A app worker --pool=solo --loglevel=info
 ```
 
-> The Celery worker processes background email/SMS notifications. The app works without it, but notifications will queue until a worker starts.
+> The Celery worker processes background email notifications. The app works without it, but notifications will queue until a worker starts.
 
 ### Run Tests
 
@@ -373,8 +373,8 @@ AIInvigilator/
 │   ├── settings.py               # Django configuration (Redis, Celery, DB pooling)
 │   ├── routing.py                # WebSocket URL routing
 │   ├── celery.py                 # Celery app configuration & autodiscovery
-│   ├── tasks.py                  # Background tasks (email/SMS notifications)
-│   └── utils.py                  # Helper functions (SMS, email utilities)
+│   ├── tasks.py                  # Background tasks (email notifications)
+│   └── utils.py                  # Helper functions (SSH, script runner)
 │
 ├── ML/                           # Machine Learning pipeline
 │   ├── frame_processor.py        # Core ML processing (YOLO inference, detection logic)
@@ -396,7 +396,7 @@ AIInvigilator/
 │   ├── conftest.py               # Shared fixtures (users, halls, logs)
 │   ├── test_models.py            # 16 model tests (CRUD, FK, indexes)
 │   ├── test_views.py             # 24 view tests (auth, CRUD, permissions)
-│   └── test_tasks.py             # 5 Celery task tests (mocked email/SMS)
+│   └── test_tasks.py             # 3 Celery task tests (mocked email)
 │
 ├── .github/workflows/ci.yml      # CI/CD pipeline (GitHub Actions)
 ├── static/                       # Static assets (CSS, JS, images)
@@ -467,7 +467,7 @@ The project includes **45 automated tests** organized into 3 test files:
 |------|-------|----------|
 | `tests/test_models.py` | 16 | Models, FK constraints, CASCADE/SET_NULL, indexes, ordering |
 | `tests/test_views.py` | 24 | Auth, permissions, CRUD, filters, JSON responses |
-| `tests/test_tasks.py` | 5 | Celery tasks with mocked email/SMS services |
+| `tests/test_tasks.py` | 3 | Celery tasks with mocked email services |
 
 ```bash
 # Run all tests
@@ -484,7 +484,7 @@ pytest tests/ -v --tb=short
 
 Every push to `main` and every pull request triggers:
 
-1. **Test Job** — Spins up Redis + MySQL services, installs dependencies, runs migrations, executes all 45 tests
+1. **Test Job** — Spins up Redis + MySQL services, installs dependencies, runs migrations, executes all 44 tests
 2. **Docker Build Job** — Builds the Docker image and caches layers (runs only on push to `main` if tests pass)
 
 Pipeline config: `.github/workflows/ci.yml`

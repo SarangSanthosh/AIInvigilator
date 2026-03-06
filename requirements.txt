@@ -154,7 +154,6 @@ torchvision==0.20.1+cu121
 tornado==6.4.2
 tqdm==4.67.1
 traitlets==5.14.3
-twilio==9.5.1
 Twisted==25.5.0
 txaio==25.12.2
 typing_extensions==4.13.2

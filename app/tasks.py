@@ -20,13 +20,12 @@ logger = logging.getLogger(__name__)
 
 @shared_task(bind=True, max_retries=3, default_retry_delay=30)
 def send_malpractice_notification(self, log_id):
-    """Send email + SMS notification for a confirmed malpractice detection.
+    """Send email notification for a confirmed malpractice detection.
     
     Retries up to 3 times with 30-second delay on failure.
     Previously: Thread(target=send_notifications_background, args=(log_id,))
     """
-    from .models import MalpraticeDetection, TeacherProfile
-    from .utils import send_sms_notification
+    from .models import MalpraticeDetection
 
     try:
         log = MalpraticeDetection.objects.select_related(
@@ -37,12 +36,6 @@ def send_malpractice_notification(self, log_id):
         if not teacher_user:
             logger.warning(f"No teacher assigned for log {log_id}")
             return
-
-        try:
-            teacher_profile = teacher_user.teacherprofile
-        except TeacherProfile.DoesNotExist:
-            logger.warning(f"No profile for user: {teacher_user.username}")
-            teacher_profile = None
 
         # Send Email
         subject = 'Malpractice Alert: New Case Reviewed'
@@ -72,23 +65,6 @@ def send_malpractice_notification(self, log_id):
             logger.error(f"Email failed for log {log_id}: {e}")
             raise self.retry(exc=e)
 
-        # Send SMS if phone available
-        if teacher_profile and teacher_profile.phone:
-            sms_body = (
-                f"Malpractice Alert\n"
-                f"{log.date} | {log.time}\n"
-                f"{log.malpractice} detected in "
-                f"{log.lecture_hall.building}-{log.lecture_hall.hall_name}.\n"
-                f"Check AIInvigilator for video proof."
-            )
-            try:
-                send_sms_notification(
-                    f"+91{teacher_profile.phone.strip()}", sms_body
-                )
-                logger.info(f"SMS sent to {teacher_profile.phone} for log {log_id}")
-            except Exception as e:
-                logger.error(f"SMS failed for log {log_id}: {e}")
-
     except MalpraticeDetection.DoesNotExist:
         logger.error(f"Log {log_id} not found")
     except Exception as e:
@@ -98,13 +74,12 @@ def send_malpractice_notification(self, log_id):
 
 @shared_task(bind=True, max_retries=3, default_retry_delay=30)
 def send_review_session_email(self, session_id):
-    """Send summary email + SMS after a review session is completed.
+    """Send summary email after a review session is completed.
     
     Retries up to 3 times with 30-second delay on failure.
     Previously: Thread(target=send_review_email, args=(session_id,))
     """
-    from .models import ReviewSession, TeacherProfile
-    from .utils import send_sms_notification
+    from .models import ReviewSession
 
     try:
         session = ReviewSession.objects.select_related(
@@ -143,22 +118,6 @@ def send_review_session_email(self, session_id):
         except Exception as e:
             logger.error(f"Review email failed for session {session_id}: {e}")
             raise self.retry(exc=e)
-
-        # Send SMS if available
-        try:
-            teacher_profile = teacher_user.teacherprofile
-            if teacher_profile and teacher_profile.phone:
-                sms_body = (
-                    f"AIInvigilator: Review complete for "
-                    f"{hall_obj.building}-{hall_obj.hall_name}. "
-                    f"{session.logs_flagged} malpractice case(s) found out of "
-                    f"{session.logs_reviewed} reviewed. Check portal for details."
-                )
-                send_sms_notification(
-                    f"+91{teacher_profile.phone.strip()}", sms_body
-                )
-        except Exception as e:
-            logger.error(f"SMS failed for session {session_id}: {e}")
 
     except ReviewSession.DoesNotExist:
         logger.error(f"ReviewSession {session_id} not found")
