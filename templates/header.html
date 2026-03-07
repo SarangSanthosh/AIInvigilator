@@ -143,4 +143,24 @@
       else nb.classList.remove('scrolled');
     });
   </script>
+
+  {% if user.is_authenticated and not user.is_superuser %}
+  <!-- Global presence WebSocket — keeps teacher online status updated -->
+  <script>
+    (function() {
+      var wsScheme = window.location.protocol === 'https:' ? 'wss' : 'ws';
+      var wsBase = wsScheme + '://' + window.location.host;
+      var presenceSocket = null;
+
+      function connectPresence() {
+        presenceSocket = new WebSocket(wsBase + '/ws/notifications/');
+        presenceSocket.onclose = function() {
+          // Reconnect after 5s (handles page-idle disconnects)
+          setTimeout(connectPresence, 5000);
+        };
+      }
+      connectPresence();
+    })();
+  </script>
+  {% endif %}
 {% endblock %}

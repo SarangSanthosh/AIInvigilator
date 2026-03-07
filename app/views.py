@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.decorators.http import require_POST
 from django.contrib.auth.models import User
 from .models import TeacherProfile
+from django.utils import timezone
 import json
 from django.db.models import Q
 from django.core.mail import send_mail
@@ -149,6 +150,11 @@ def addlogin(request):
 
         if user is not None:
             auth_login(request, user)
+            # Mark teacher as online immediately on login
+            if not user.is_superuser:
+                TeacherProfile.objects.filter(user=user).update(
+                    is_online=True, last_seen=timezone.now()
+                )
             return redirect('index')
         else:
             return render(request, 'login.html', {'error': 'Invalid credentials'})
@@ -162,6 +168,11 @@ def login(request):
 
 @login_required
 def logout(request):
+    # Mark teacher as offline before logging out
+    if not request.user.is_superuser:
+        TeacherProfile.objects.filter(user=request.user).update(
+            is_online=False, last_seen=timezone.now()
+        )
     auth_logout(request)
     return redirect('index')
 
